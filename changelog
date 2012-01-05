@@ -1,0 +1,14 @@
+DA FARE:
+aggiornare language tag nei file localizzati e aggiungere i charset e language tag dove non ci sono
+funzione richiesta da larsen007 (traduttore tedesco): una checkbox per non far attivare il marker quando si usa la rotella
+
+PRIMA DI PUBBLICARE:
+togliere la linea di auto-update
+controllare il numero di versione
+compiare locales/en nella root
+
+SITI CHE NON VANNO:
+http://www.omgubuntu.co.uk/2011/06/new-episode-of-new-developer-orientated-gnome-screencasts-now-online/
+
+CHANGELOG:
+aggiunta traduzione tedesca (ringraziare)

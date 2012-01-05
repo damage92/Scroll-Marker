@@ -1,0 +1,309 @@
+<html>
+<head>
+
+<script type="text/javascript">
+
+//	localStorage.setItem("site_list", "");
+
+	function get_active_tab() {
+		var tab = opera.extension.tabs.getFocused();
+		return tab;
+	}
+
+	function get_dominio(url, what) {
+		var site_url = new String; 
+
+		//remove file path
+		site_url = url.split("/")[2];
+		
+		if (what == "all") {
+			site_url = site_url.split(".");
+			site_url = "*." + site_url[site_url.length-2] + "." + site_url[site_url.length-1];
+		}
+
+		if (site_url != undefined) site_url = site_url.replace("www.", "");
+
+
+		return site_url;
+	}
+
+	function send_new_status() {
+
+		try { //this cause error when called from option page
+			active_tab = get_active_tab();
+
+			var prefs = new Array;
+			prefs[3] = widget.preferences.active;
+
+
+			if ((list.indexOf(" "+get_dominio(active_tab.url))!=-1 ) || (list.indexOf(" "+get_dominio(active_tab.url, 'all'))!=-1))
+				widget.preferences.black == "false" ? prefs[4] = "true" : prefs[4] = "false";
+			else prefs[4] = widget.preferences.black;
+
+			var mess = new MessageContainer();			
+			mess.title = "status";
+			mess.data = prefs;
+
+			active_tab.postMessage(mess);
+
+			refresh_badge(prefs[4]);
+
+		} catch (err) {}
+	}
+
+
+	function add_site(what) {
+		var dominio = get_dominio(get_active_tab().url, what);
+
+		if (list.indexOf(" " + dominio) > -1)	return;
+
+		list += " " + dominio;
+		localStorage.setItem("site_list", list);
+
+		send_new_status();
+
+	}
+
+
+	function remove_site(dominio) {
+		if (dominio == undefined)
+			var dominio = get_dominio(get_active_tab().url);
+		list = list.replace(" " + dominio, "");
+		localStorage.setItem("site_list", list);
+
+		send_new_status();
+
+
+	}
+
+	function modify_site(old_site, new_site) {
+
+		if (list.indexOf(" " + new_site) > -1)
+			return 1;
+
+		list = list.replace(" " + old_site, " " + new_site);
+		localStorage.setItem("site_list", list);
+
+		send_new_status();
+
+		return 0;
+
+	}
+
+	function MessageContainer() {
+		this.title = "";
+		this.data = "";
+	}
+
+
+	function deactivate() {
+		widget.preferences.active = "false";
+		send_new_status();
+
+	}
+
+	function activate() {
+		widget.preferences.active = "true";
+		send_new_status();
+	}
+
+	function activate_list() {
+		widget.preferences.active = "list";
+		send_new_status();
+	}
+
+
+	function load_list() {
+		list = localStorage.getItem("site_list");
+		if (!list) list = "";
+	}
+
+	var list;
+	load_list();
+
+	//create the button
+	var ButtonProperties = {
+		disabled: false,
+		title: "Scroll marker",
+		icon: "button.png",
+		popup: {
+			href: "popup.html",
+			width: 220,
+			height: 320
+		},
+		badge: {
+			display: "block",
+			textContent: "",
+			color: "black",
+			backgroundColor: "rgba(50, 256, 50, 0.3)"
+		}
+
+	}
+
+	function switchPopupButton(pref) {
+		if (pref == "true") opera.contexts.toolbar.addItem(theButton);
+		else opera.contexts.toolbar.removeItem(theButton);
+	}
+
+	var theButton = opera.contexts.toolbar.createItem(ButtonProperties);
+	switchPopupButton(widget.preferences.button);
+
+
+	function refresh_badge(pref) {
+
+		switch (widget.preferences.active) {
+		case "false":
+			theButton.badge.textContent = "off";
+			theButton.badge.backgroundColor = "rgba(256, 50, 50, 0.3)";
+		break;
+
+		case "true":
+			theButton.badge.textContent = "on";
+			theButton.badge.backgroundColor = "rgba(50, 256, 50, 0.3)";
+		break;
+
+		case "list":
+			if (pref == "true") {
+				theButton.badge.textContent = "on";
+				theButton.badge.backgroundColor = "rgba(50, 256, 50, 0.3)";
+			} else {
+				theButton.badge.textContent = "off";
+				theButton.badge.backgroundColor = "rgba(256, 50, 50, 0.3)";
+			}
+		break;
+		}
+
+	}
+
+
+	var prefs = new Array;
+	widget.preferences.changed = "false"; //if prefs was changed by user, then send new prefs to script
+
+	function read_prefs(origin) {
+
+		switchPopupButton(widget.preferences.button);
+	
+		//retro-compatibility (from 0.5-1)
+		if (widget.preferences.opacity < 10) widget.preferences.opacity = widget.preferences.opacity * 10;
+
+		prefs[0] = widget.preferences.trasp;
+		prefs[1] = widget.preferences.time;
+		prefs[2] = widget.preferences.mode;
+		prefs[3] = widget.preferences.active;
+
+		if ((list.indexOf(" "+get_dominio(origin)) != -1) || (list.indexOf(" "+get_dominio(origin, 'all')) != -1))
+			widget.preferences.black == "false" ? prefs[4] = "true" : prefs[4] = "false";
+		else prefs[4] = widget.preferences.black;
+
+//		prefs[5] = widget.preferences.black;
+		prefs[6] = widget.preferences.hide_click;
+		prefs[7] = widget.preferences.color;
+		prefs[8] = widget.preferences.height;
+		prefs[9] = widget.preferences.time_ch;
+		prefs[10] = widget.preferences.line_type;
+
+		if (origin == get_active_tab().url) refresh_badge(prefs[4]);		
+	
+	}
+
+
+	//injected script on connect
+	opera.extension.onconnect = function(event) {
+
+		//send preferences
+		if (event.origin.indexOf('widget://') == -1) {
+		
+			read_prefs(event.origin);
+
+			var mess = new MessageContainer();			
+			mess.title = "prefs";
+			mess.data = prefs;
+
+			try { event.source.postMessage(mess);
+			} catch(exception) {}
+
+		}
+
+	}
+
+
+	//on tab change focus
+	opera.extension.tabs.onfocus = function(event) {
+	
+		active_tab = get_active_tab();
+		if (active_tab == null) return;
+			
+		if (widget.preferences.changed == "true") {
+			read_prefs(active_tab.url);
+			
+			var mess = new MessageContainer();			
+			mess.title = "prefs";
+			mess.data = prefs;
+			
+			opera.extension.broadcastMessage(mess);
+			widget.preferences.changed = "false";			
+		}
+		
+		send_new_status();
+		
+	}
+
+/*
+	//injected script on connect
+	opera.extension.onconnect = function(event) {
+
+		//send preferences
+		if (event.origin.indexOf('widget://') == -1) {
+
+			var prefs = new Array;
+		
+			//retro-compatibility (from 0.5-1)
+			if (widget.preferences.opacity < 10) widget.preferences.opacity = widget.preferences.opacity * 10;
+
+
+			prefs[0] = widget.preferences.trasp;
+			prefs[1] = widget.preferences.time;
+			prefs[2] = widget.preferences.mode;
+			prefs[3] = widget.preferences.active;
+
+			if ((list.indexOf(" "+get_dominio(event.origin)) != -1) || (list.indexOf(" "+get_dominio(event.origin, 'all')) != -1))
+				widget.preferences.black == "false" ? prefs[4] = "true" : prefs[4] = "false";
+			else prefs[4] = widget.preferences.black;
+
+			prefs[5] = widget.preferences.black;
+			prefs[6] = widget.preferences.hide_click;
+			prefs[7] = widget.preferences.color;
+			prefs[8] = widget.preferences.height;
+			prefs[9] = widget.preferences.time_ch;
+			prefs[10] = widget.preferences.line_type;
+
+			if (event.origin == get_active_tab().url) refresh_badge(prefs[4]);
+
+			var mess = new MessageContainer();			
+			mess.title = "prefs";
+			mess.data = prefs;
+
+			try {
+				event.source.postMessage(mess);
+			} catch(exception) {}
+
+
+		}
+
+	}
+
+	//on tab change focus
+	opera.extension.tabs.onfocus = function() {
+
+		var active_tab = get_active_tab();
+		if (active_tab == null)	return;
+		
+		send_new_status();
+
+	}
+*/
+
+</script>
+
+</head>
+</html>

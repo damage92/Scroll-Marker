@@ -1,0 +1,88 @@
+.desc {
+	padding-left:10px;
+}
+
+.long_desc {
+	font-style:italic;
+}
+
+.section_title {
+	margin-top:20px;
+	text-shadow: 1px 1px 3px #777;
+}
+
+.def_value {	
+	float:right;
+	opacity:0.5;
+	text-decoration:none;
+}
+
+.def_value:hover {
+	opacity:1;
+	text-decoration:underline;
+}
+
+.header {
+	font-size:20px;
+	text-align:center;
+	color:#700
+}
+
+input[type=color] {
+	width:50px;
+}
+
+input[type=range] {
+	width:100px;
+}
+
+#cont {
+	line-height:25px;
+	margin-left:auto;
+	margin-right:auto; width:700px;
+	font-family:arial;
+	background:#F2F2F2;
+	padding: 1px 10px 8px 10px;
+	border-top: solid 2px grey;
+	border-bottom: solid 2px grey;
+}
+
+#export_list {
+	line-height:20px;
+}
+
+#thumb {
+	position:relative;
+	margin-left:10px;
+	height:30px;
+	width:680px;
+	background:gray;
+	top:22px;
+	opacity:0.5;
+}
+
+#thumb_cont {
+	background-image: url(/lorem_ipsum.png);
+	width:700px;
+	height: 88px;
+	margin-top:10px;
+}
+
+#active_bt, #list_bt, #deactive_bt {
+	width:190px;
+	height:40px;
+	font-weight:bold;
+	margin-bottom:5px;
+}
+
+#active_bt{color:green}
+#list_bt{color:#f70}
+#deactive_bt{color:red}
+
+#bts_cont {
+	text-align:center;
+	margin-top: 15px;
+	margin-bottom: 15px;	
+}
+
+.bt_selected {border:1px solid green}

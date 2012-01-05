@@ -1,0 +1,5 @@
+DESCRIPTION:
+
+Scroll Marker is an Opera extension that helps you to read long texts on web pages, like articles or news. When you read a long text, you must often scroll the page, so you may miss the mark. Scroll Marker draw a marker that shows you where was the end of the page before scroll it. In this way you can easly find the mark.
+
+To make .oex on linux/*nix modify code, then exec make.sh. Now scrollmarker.oex is ready to install.

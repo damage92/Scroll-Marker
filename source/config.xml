@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<widget xmlns="http://www.w3.org/ns/widgets" version="0.5-4 build12" id="extension:scrollmarker">
+	<name>Scroll Marker DEV</name>
+	<author href="http://stylecode.altervista.org">Damage92</author>
+	<icon src="icon.png"/>
+	<description xml:lang="en">A marker that helps you to read long pages</description>
+	<description xml:lang="it">Un marcatore che aiuta a leggere testi lunghi</description>
+	<description xml:lang="ru">Маркер прокрутки - помощь при чтении длинных страниц</description>
+
+	<preference name="trasp" value="50" />
+	<preference name="time" value="1.5" />
+	<preference name="time_ch" value="1" />
+	<preference name="active" value="true" />
+	<preference name="black" value="false" />
+	<preference name="button" value="true" />
+	<preference name="hide_click" value="true" />
+	<preference name="color" value="#b0b0b0" />
+	<preference name="height" value="30" />
+	<preference name="line_type" value="0" />
+
+	<update-description href="http://stylecode.altervista.org/scroll_marker/update.php?build=12"/>
+
+</widget>

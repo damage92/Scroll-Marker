@@ -1,0 +1,144 @@
+<html>
+<head>
+<style>
+body {
+	font-family:'Arial';
+}
+</style>
+
+<script src="translation.js"></script>
+<script src="strings.js"></script>
+
+</head>
+<body align="center" style="background:#f9f9f9">
+
+<button id="active_bt" style="width:190px; height:40px; color:green; font-weight:bold; margin-bottom:5px;" onClick="active_click()"></button>
+<button id="list_bt" style="width:190px; height:40px; color:#f70; font-weight:bold; margin-bottom:5px" onClick="list_click()"></button>
+<button id="deactive_bt" style="width:190px; height:40px; color:red;  font-weight:bold;" onClick="deactive_click()"></button>
+
+<br>
+<br>
+<span style="font-size:13px">
+	<a id="list_desc" href="javascript:window.location='list.html';" style="font-size:13px"></a>
+	<br>
+	<span id="add/remove"></span>
+</span>
+
+<script type="text/javascript">
+
+document.getElementById("active_bt").innerHTML = _("Always active");
+document.getElementById("list_bt").innerHTML = _("According to the list");
+document.getElementById("deactive_bt").innerHTML = _("Deactive");
+
+
+//check the current mode
+switch (widget.preferences.active) {
+	case "true":
+	document.getElementById('active_bt').style.border = "1px solid green";
+	break;
+
+	case "false":
+	document.getElementById('deactive_bt').style.border = "1px solid green";
+	break;
+
+	case "list":
+	document.getElementById('list_bt').style.border = "1px solid green";
+	break;
+}
+
+if (widget.preferences.black == "false") document.getElementById("list_desc").innerHTML = _("list of web site where activate the marker (whitelist)");
+else document.getElementById("list_desc").innerHTML = _("list of web site where not activate the marker (blacklist)");
+
+check_addremove();
+
+
+//check if current site is listed
+function check_addremove() {
+
+try {
+
+	dom_only = opera.extension.bgProcess.get_dominio(opera.extension.bgProcess.get_active_tab().url)
+	dom_all = opera.extension.bgProcess.get_dominio(opera.extension.bgProcess.get_active_tab().url, 'all');
+
+	if ( (dom_only != undefined) && (dom_all != undefined)) {
+
+		label = document.getElementById('add/remove');
+
+		//if not in list
+		if ( (opera.extension.bgProcess.list.indexOf(" " + dom_all) == -1) && (opera.extension.bgProcess.list.indexOf(" " + dom_only) == -1) ) {
+			label.innerHTML = "<br><a href=\"javascript:add_site()\">"+_("Add this site to the list")+"</a><br><br><a href='javascript:add_site(\"all\")'>"+_("Add all")+" " + dom_all + " " + _("sites to the list")+"</a>";	
+
+		} else {
+
+			if (opera.extension.bgProcess.list.indexOf(" " + dom_all) > -1) { //ALL
+				label.innerHTML = "<br><a href='javascript:remove_site(\"" + dom_all + "\")' style=\"color:red\">"+_("Remove all") + " " + dom_all + " " + _("sites from the list")+"</a>";
+			}
+
+			if (opera.extension.bgProcess.list.indexOf(" " + dom_only) > -1) { //ONLY
+				label.innerHTML = "<br><a href=\"javascript:remove_site()\" style=\"color:red\">"+_("Remove this site from the list")+"</a><br><br><a href='javascript:extend_add_site(\""+dom_only+"\", \""+dom_all+"\")'>"+_("Add all")+" " + dom_all + " " + _("sites to the list")+"</a>";
+			}
+		}
+
+	} else {
+		document.getElementById('add/remove').innerHTML = "";
+	}
+
+
+
+} catch (err) {
+	document.getElementById('add/remove').innerHTML = '';
+}
+
+
+}
+
+function active_click () {
+	activate();
+	window.close();
+}
+
+function deactive_click () {
+	deactivate();
+	window.close();
+}
+
+function list_click () {
+	activate_list();
+	window.close();
+}
+
+
+function deactivate() {
+	opera.extension.bgProcess.deactivate();
+}
+
+function activate() {
+	opera.extension.bgProcess.activate();
+}
+
+function activate_list() {
+	opera.extension.bgProcess.activate_list();	
+}
+
+function add_site(what) {
+	opera.extension.bgProcess.add_site(what);
+	check_addremove();
+}
+
+function extend_add_site(only, all) {
+	opera.extension.bgProcess.remove_site(only);	
+	opera.extension.bgProcess.add_site('all');
+	check_addremove();
+}
+
+function remove_site(dominio) {
+	opera.extension.bgProcess.remove_site(dominio);
+	check_addremove();
+}
+
+</script>
+
+
+
+</body>
+</html>

@@ -1,0 +1,103 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+
+	<meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+
+	<script src="translation.js"></script>
+	<script src="strings.js"></script>	
+
+<style>
+
+.list_item:hover {
+	background:#88f;
+}
+
+body {
+	font-family:'Arial';
+}
+
+</style>
+
+
+<script type="text/javascript">
+
+var sel_item;
+
+function on_item_click(target) {
+
+	if (sel_item) sel_item.style.fontWeight = "normal";
+	sel_item = target;
+	sel_item.style.fontWeight = "bold";
+
+	document.getElementById('text_input').value = target.innerHTML;
+
+}
+
+
+function delete_item() {
+	
+	var warn_label = document.getElementById('warn');
+	warn_label.style.display = "none";
+
+	if (!sel_item) {
+		warn_label.innerHTML = _("Select an item!");
+		warn_label.style.display = "inline";
+		return;
+	}
+
+	opera.extension.bgProcess.remove_site(sel_item.innerHTML);
+	document.getElementById('list').removeChild(sel_item);
+
+	sel_item = null;
+
+	warn_label.innerHTML = _("Deleted");
+	warn_label.style.display = "inline";
+
+}
+
+
+</script>
+
+</head>
+<body align="left" style="background:#f9f9f9">
+
+<a id="back_bt" href="javascript:window.location='popup.html'" style="text-decoration:none"></a><br>
+<br>
+
+<div id="list" style="overflow-y:scroll; height:170px; background:#ddd">
+
+<script type="text/javascript">
+
+
+	document.getElementById("back_bt").innerHTML = "&lt;&lt; "+_("Back...");
+
+	//view the list
+	list_arr = opera.extension.bgProcess.list.split(" ");
+
+	if (list_arr.length <= 1) document.writeln("<div style='color:#333'><i>"+_("Empty list!")+"</i></div>");		
+	else {
+		for (i=0; i<list_arr.length; i++)
+			document.writeln("<div class='list_item' onClick='on_item_click(this)'>" + list_arr[i] + "</div>");
+	}	
+
+</script>
+
+</div>
+
+
+<p style="font-family:monospace; font-size:15px">
+
+
+<a id="delete_bt" href="javascript:delete_item()"></a><br>
+
+<span id="warn" style="color:red; font-size:13px; display:none">Avviso</span>
+
+<script>document.getElementById("delete_bt").innerHTML = _("delete from list");</script>
+
+</p>
+
+
+</body>
+</html>

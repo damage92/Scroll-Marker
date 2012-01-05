@@ -1,0 +1,4 @@
+!#/bin/bash
+rm ./scrollmarker.oex
+cd ./source
+zip -r ../scrollmarker.oex *
