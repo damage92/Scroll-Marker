@@ -4,6 +4,7 @@ var options_desc = {
 		min: 0,
 		max: 90,
 		step: 1,
+		units: "%",
 		title: "Trasparency",
 		desc: "marker's trasparency Level",
 		def_value: 50

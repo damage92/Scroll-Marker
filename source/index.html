@@ -90,9 +90,9 @@
 
 	}
 
-	function MessageContainer() {
-		this.title = "";
-		this.data = "";
+	function MessageContainer(title, data) {
+		this.title = title;
+		this.data = data;
 	}
 
 
@@ -175,51 +175,27 @@
 
 	}
 
-
-	var prefs = new Array;
 	widget.preferences.changed = "false"; //if prefs was changed by user, then send new prefs to script
 
-	function read_prefs(origin) {
-
-		switchPopupButton(widget.preferences.button);
+	function read_prefs() {
 	
-		//retro-compatibility (from 0.5-1)
-		if (widget.preferences.opacity < 10) widget.preferences.opacity = widget.preferences.opacity * 10;
-
-		prefs[0] = widget.preferences.trasp;
-		prefs[1] = widget.preferences.time;
-		prefs[2] = widget.preferences.mode;
-		prefs[3] = widget.preferences.active;
-
-		if ((list.indexOf(" "+get_dominio(origin)) != -1) || (list.indexOf(" "+get_dominio(origin, 'all')) != -1))
-			widget.preferences.black == "false" ? prefs[4] = "true" : prefs[4] = "false";
-		else prefs[4] = widget.preferences.black;
-
-//		prefs[5] = widget.preferences.black;
-		prefs[6] = widget.preferences.hide_click;
-		prefs[7] = widget.preferences.color;
-		prefs[8] = widget.preferences.height;
-		prefs[9] = widget.preferences.time_ch;
-		prefs[10] = widget.preferences.line_type;
-
-		if (origin == get_active_tab().url) refresh_badge(prefs[4]);		
-	
+		prefs = {};
+		for (opt in widget.preferences)
+			prefs[opt] = widget.preferences[opt];
+			
+		return prefs;
 	}
-
 
 	//injected script on connect
 	opera.extension.onconnect = function(event) {
 
 		//send preferences
 		if (event.origin.indexOf('widget://') == -1) {
-		
-			read_prefs(event.origin);
 
-			var mess = new MessageContainer();			
-			mess.title = "prefs";
-			mess.data = prefs;
+			prefs = read_prefs();
+			var message = new MessageContainer("prefs", prefs);
 
-			try { event.source.postMessage(mess);
+			try { event.source.postMessage(message);
 			} catch(exception) {}
 
 		}
@@ -230,78 +206,22 @@
 	//on tab change focus
 	opera.extension.tabs.onfocus = function(event) {
 	
-		active_tab = get_active_tab();
-		if (active_tab == null) return;
-			
 		if (widget.preferences.changed == "true") {
-			read_prefs(active_tab.url);
+		
+			//update popup button
+			switchPopupButton(widget.preferences.button);
 			
-			var mess = new MessageContainer();			
-			mess.title = "prefs";
-			mess.data = prefs;
+			//broadcast new preferences
+			prefs = read_prefs();
+			var message = new MessageContainer("prefs", prefs);
+			opera.extension.broadcastMessage(message);
 			
-			opera.extension.broadcastMessage(mess);
+			//end
 			widget.preferences.changed = "false";			
 		}
-		
-		send_new_status();
-		
+			
 	}
 
-/*
-	//injected script on connect
-	opera.extension.onconnect = function(event) {
-
-		//send preferences
-		if (event.origin.indexOf('widget://') == -1) {
-
-			var prefs = new Array;
-		
-			//retro-compatibility (from 0.5-1)
-			if (widget.preferences.opacity < 10) widget.preferences.opacity = widget.preferences.opacity * 10;
-
-
-			prefs[0] = widget.preferences.trasp;
-			prefs[1] = widget.preferences.time;
-			prefs[2] = widget.preferences.mode;
-			prefs[3] = widget.preferences.active;
-
-			if ((list.indexOf(" "+get_dominio(event.origin)) != -1) || (list.indexOf(" "+get_dominio(event.origin, 'all')) != -1))
-				widget.preferences.black == "false" ? prefs[4] = "true" : prefs[4] = "false";
-			else prefs[4] = widget.preferences.black;
-
-			prefs[5] = widget.preferences.black;
-			prefs[6] = widget.preferences.hide_click;
-			prefs[7] = widget.preferences.color;
-			prefs[8] = widget.preferences.height;
-			prefs[9] = widget.preferences.time_ch;
-			prefs[10] = widget.preferences.line_type;
-
-			if (event.origin == get_active_tab().url) refresh_badge(prefs[4]);
-
-			var mess = new MessageContainer();			
-			mess.title = "prefs";
-			mess.data = prefs;
-
-			try {
-				event.source.postMessage(mess);
-			} catch(exception) {}
-
-
-		}
-
-	}
-
-	//on tab change focus
-	opera.extension.tabs.onfocus = function() {
-
-		var active_tab = get_active_tab();
-		if (active_tab == null)	return;
-		
-		send_new_status();
-
-	}
-*/
 
 </script>
 
