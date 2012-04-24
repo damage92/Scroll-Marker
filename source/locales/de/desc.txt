@@ -1,0 +1,16 @@
+"A marker that helps you to read long pages" : ""
+
+"Scroll Marker helps you to read long texts on web pages. When you read a long text, you must often scroll the page, so you may miss the mark. Scroll Marker draw a marker that shows you where was the end of the page before scroll it. In this way you can easly find the mark.
+
+This function was in an older Opera version, but was removed in new versions.
+
+You can activate or deactivate the marker using a popup. Alternatively you can choose to automaticaly activate the marker on certain web sites, that are in a list created by the user. The list can be also a blacklist, so the marker will be always active, but not on the listed sites.
+
+If you want to translate this extension you can email me or visit support page.
+
+Thanks to OK3 for having suggested the idea, and for his help in realization.
+Thank to larsen007 for german translation." : ""
+
+"better code" : ""
+"new look" : ""
+"german traslation" : ""

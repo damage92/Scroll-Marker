@@ -125,6 +125,10 @@ function on_mouse_wheel() {
 	catch(e){}
 }
 
+function on_resize() {
+	marker.main_div.setAttribute("width", document.documentElement.clientWidth);
+	marker.draw_line();
+}
 
 function Marker() {
 
@@ -171,12 +175,18 @@ function Marker() {
 				document.addEventListener("scroll", on_scroll_b, false);
 			break;
 		}
+		
+		this.draw_line();
+
+	}
 
 
-
+	this.draw_line = function() {
+		
 		//draw line and arrows
+		width = document.documentElement.clientWidth;
 		context = this.main_div.getContext("2d");
-		context.clearRect(0, 0, window.innerWidth, prefs.height);
+		context.clearRect(0, 0, width, prefs.height);
 
 		/*
 		col = "#";
@@ -194,29 +204,30 @@ function Marker() {
 		context.lineTo(prefs.height, prefs.height/2);
 		context.lineTo(0, prefs.height);
 		context.fill();
-	
+
+
 		context.beginPath();
-		context.moveTo(window.innerWidth, 0);
-		context.lineTo(window.innerWidth - prefs.height, prefs.height/2);
-		context.lineTo(window.innerWidth, prefs.height);
+		context.moveTo(width, 0);
+		context.lineTo(width - prefs.height, prefs.height/2);
+		context.lineTo(width, prefs.height);
 		context.fill();
 
 		if (prefs.line_type == 1) {
-			context.fillRect(prefs.height, prefs.height/2, window.innerWidth - prefs.height*2, 1);
+			context.fillRect(prefs.height, prefs.height/2, width - prefs.height*2, 1);
 		} else if (prefs.line_type == 0) {
-			for (i = prefs.height; i < window.innerWidth - prefs.height; i = i - (-20))
+			for (i = prefs.height; i < width - prefs.height; i = i - (-20))
 				context.fillRect(i, prefs.height/2, 10, 1);
 		}
 
-	
+
 	}
-
-
+	
 	this.hide = function() {
 		this.main_div.style.visibility = "hidden";
 	}
 
 	this.show = function() {
+		this.main_div.style.left = window.scrollX + "px";
 		this.main_div.style.visibility = "visible";	
 	}
 
@@ -299,6 +310,8 @@ function Marker() {
 
 	this.on_scroll_al = function(e) {
 
+		if (this.last_scrollY == window.scrollY) return;
+
 		if (this.key_values.indexOf(this.scroll_input) == -1) {
 
 			if (this.reset_timer == 0) {
@@ -329,7 +342,7 @@ function Marker() {
 	
 	//make div
 	this.main_div = document.createElement("canvas");
-	this.main_div.setAttribute("width", window.innerWidth);
+	this.main_div.setAttribute("width", document.documentElement.clientWidth);
 	this.main_div.style = "z-index:90000; position:absolute; left:0px; top:0px; visibility:hidden;";
 	this.apply_prefs();
 
@@ -346,10 +359,12 @@ function Marker() {
 
 	//connect events
 	document.addEventListener('keypress', on_key_press, false);
+	document.addEventListener('resize', on_resize, false);
 
 	this.destructor = function() {
 
 		document.removeEventListener('keypress', on_key_press);
+		document.removeEventListener('resize', on_resize);
 
 		document.removeEventListener("scroll", on_scroll_al);
 		document.removeEventListener("scroll", on_scroll_t);
