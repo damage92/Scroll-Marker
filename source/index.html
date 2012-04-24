@@ -1,229 +1,268 @@
 <html>
 <head>
+<script>
 
-<script type="text/javascript">
+function get_dominio(url, what) {
+	var site_url = new String; 
 
-//	localStorage.setItem("site_list", "");
-
-	function get_active_tab() {
-		var tab = opera.extension.tabs.getFocused();
-		return tab;
+	//remove file path
+	site_url = url.split("/")[2];
+                
+	if (what == "all") {
+		site_url = site_url.split(".");
+		site_url = "*." + site_url[site_url.length-2] + "." + site_url[site_url.length-1];
 	}
 
-	function get_dominio(url, what) {
-		var site_url = new String; 
+	if (site_url != undefined) site_url = site_url.replace("www.", "");
 
-		//remove file path
-		site_url = url.split("/")[2];
-		
-		if (what == "all") {
-			site_url = site_url.split(".");
-			site_url = "*." + site_url[site_url.length-2] + "." + site_url[site_url.length-1];
-		}
+	return site_url;
+}
 
-		if (site_url != undefined) site_url = site_url.replace("www.", "");
+function get_active_tab() {
+	var tab = opera.extension.tabs.getFocused();
+	return tab;
+}
 
 
-		return site_url;
-	}
+function add_site(what) {
+	var dominio = get_dominio(get_active_tab().url, what);
 
-	function send_new_status() {
+	if (stat.list.indexOf(" " + dominio) > -1)   return;
 
-		try { //this cause error when called from option page
-			active_tab = get_active_tab();
+	stat.list += " " + dominio;
+	localStorage.setItem("site_list", stat.list);
 
-			var prefs = new Array;
-			prefs[3] = widget.preferences.active;
+	stat.send_current();
 
-
-			if ((list.indexOf(" "+get_dominio(active_tab.url))!=-1 ) || (list.indexOf(" "+get_dominio(active_tab.url, 'all'))!=-1))
-				widget.preferences.black == "false" ? prefs[4] = "true" : prefs[4] = "false";
-			else prefs[4] = widget.preferences.black;
-
-			var mess = new MessageContainer();			
-			mess.title = "status";
-			mess.data = prefs;
-
-			active_tab.postMessage(mess);
-
-			refresh_badge(prefs[4]);
-
-		} catch (err) {}
-	}
+}
 
 
-	function add_site(what) {
-		var dominio = get_dominio(get_active_tab().url, what);
+function remove_site(dominio) {
+	if (dominio == undefined)
+		var dominio = get_dominio(get_active_tab().url);
+	stat.list = stat.list.replace(" " + dominio, "");
+	localStorage.setItem("site_list", stat.list);
 
-		if (list.indexOf(" " + dominio) > -1)	return;
+	stat.send_current();
+}
 
-		list += " " + dominio;
-		localStorage.setItem("site_list", list);
+function modify_site(old_site, new_site) {
 
-		send_new_status();
+	if (stat.list.indexOf(" " + new_site) > -1)
+		return 1;
 
-	}
+	stat.list = stat.list.replace(" " + old_site, " " + new_site);
+	localStorage.setItem("site_list", stat.list);
 
-
-	function remove_site(dominio) {
-		if (dominio == undefined)
-			var dominio = get_dominio(get_active_tab().url);
-		list = list.replace(" " + dominio, "");
-		localStorage.setItem("site_list", list);
-
-		send_new_status();
-
-
-	}
-
-	function modify_site(old_site, new_site) {
-
-		if (list.indexOf(" " + new_site) > -1)
-			return 1;
-
-		list = list.replace(" " + old_site, " " + new_site);
-		localStorage.setItem("site_list", list);
-
-		send_new_status();
-
-		return 0;
-
-	}
-
-	function MessageContainer(title, data) {
-		this.title = title;
-		this.data = data;
-	}
-
-
-	function deactivate() {
-		widget.preferences.active = "false";
-		send_new_status();
-
-	}
-
-	function activate() {
-		widget.preferences.active = "true";
-		send_new_status();
-	}
-
-	function activate_list() {
-		widget.preferences.active = "list";
-		send_new_status();
-	}
-
-
-	function load_list() {
-		list = localStorage.getItem("site_list");
-		if (!list) list = "";
-	}
-
-	var list;
-	load_list();
-
-	//create the button
-	var ButtonProperties = {
-		disabled: false,
-		title: "Scroll marker",
-		icon: "button.png",
-		popup: {
-			href: "popup.html",
-			width: 220,
-			height: 320
-		},
-		badge: {
-			display: "block",
-			textContent: "",
-			color: "black",
-			backgroundColor: "rgba(50, 256, 50, 0.3)"
-		}
-
-	}
-
-	function switchPopupButton(pref) {
-		if (pref == "true") opera.contexts.toolbar.addItem(theButton);
-		else opera.contexts.toolbar.removeItem(theButton);
-	}
-
-	var theButton = opera.contexts.toolbar.createItem(ButtonProperties);
-	switchPopupButton(widget.preferences.button);
-
-
-	function refresh_badge(pref) {
-
-		switch (widget.preferences.active) {
-		case "false":
-			theButton.badge.textContent = "off";
-			theButton.badge.backgroundColor = "rgba(256, 50, 50, 0.3)";
-		break;
-
-		case "true":
-			theButton.badge.textContent = "on";
-			theButton.badge.backgroundColor = "rgba(50, 256, 50, 0.3)";
-		break;
-
-		case "list":
-			if (pref == "true") {
-				theButton.badge.textContent = "on";
-				theButton.badge.backgroundColor = "rgba(50, 256, 50, 0.3)";
-			} else {
-				theButton.badge.textContent = "off";
-				theButton.badge.backgroundColor = "rgba(256, 50, 50, 0.3)";
-			}
-		break;
-		}
-
-	}
-
-	widget.preferences.changed = "false"; //if prefs was changed by user, then send new prefs to script
-
-	function read_prefs() {
+	stat.send_current();
 	
-		prefs = {};
+	return 0;
+
+}
+
+
+
+function Message(dest, title, data) {
+	
+	mess = {};
+	mess.title = title;
+	mess.data = data;
+
+	if (dest == null) opera.extension.broadcastMessage(mess);
+	else {
+		try { dest.postMessage(mess); }
+		catch(exception) {}
+	}
+
+}
+
+function Button() {
+
+	this.visible = "false";
+
+        this.properties = {
+                disabled: false,
+                title: "Scroll marker",
+                icon: "button.png",
+                popup: {
+                        href: "popup.html",
+                        width: 220,
+                        height: 320
+                },
+                badge: {
+                        display: "block",
+                        textContent: "",
+                        color: "black",
+                        backgroundColor: "rgba(50, 256, 50, 0.3)"
+                }
+
+        }
+
+	this.toggle = function(pref) {
+
+		if (this.visible != prefs) {
+	                if (pref == "true") opera.contexts.toolbar.addItem(this.button);
+			else opera.contexts.toolbar.removeItem(this.button);
+
+			this.visible = pref;
+		}
+        }
+
+	this.badge = function(label) {
+
+		if (label == "on" || label == "true") {
+                        this.button.badge.textContent = "on";
+                        this.button.badge.backgroundColor = "rgba(50, 256, 50, 0.3)";
+		} else {
+                        this.button.badge.textContent = "off";
+                        this.button.badge.backgroundColor = "rgba(256, 50, 50, 0.3)";
+		}
+
+        }
+
+
+        this.button = opera.contexts.toolbar.createItem(this.properties);
+        this.toggle(widget.preferences.button);
+
+
+}
+
+
+function Prefs() {
+
+	this.prefs;
+
+	this.load = function() {
+
+		this.prefs = {};
 		for (opt in widget.preferences)
-			prefs[opt] = widget.preferences[opt];
-			
-		return prefs;
-	}
+			this.prefs[opt] = widget.preferences[opt];
 
-	//injected script on connect
-	opera.extension.onconnect = function(event) {
-
-		//send preferences
-		if (event.origin.indexOf('widget://') == -1) {
-
-			prefs = read_prefs();
-			var message = new MessageContainer("prefs", prefs);
-
-			try { event.source.postMessage(message);
-			} catch(exception) {}
-
-		}
+		widget.preferences.changed = "false";
 
 	}
 
-
-	//on tab change focus
-	opera.extension.tabs.onfocus = function(event) {
-	
+	this.refresh = function() {
 		if (widget.preferences.changed == "true") {
-		
-			//update popup button
-			switchPopupButton(widget.preferences.button);
-			
-			//broadcast new preferences
-			prefs = read_prefs();
-			var message = new MessageContainer("prefs", prefs);
-			opera.extension.broadcastMessage(message);
-			
-			//end
-			widget.preferences.changed = "false";			
-		}
-			
+			this.load();
+			button.toggle(widget.preferences.button);
+
+			return true;
+		} else return false;
 	}
+
+	this.send = function(tab) {
+
+		this.refresh();
+		Message(tab, "prefs", this.prefs);
+	}
+
+	this.update_all = function(tab) {
+
+		if (this.refresh()) Message(null, "prefs", this.prefs);
+
+	}
+
+	this.load();
+
+}
+
+function Stat() {
+
+	this.change = function(active) {
+
+		if (this.active == active) return;
+
+		this.active = active;
+		widget.preferences.active = active;
+		this.refresh_button();
+
+		if (this.active != "list") Message(null, "status", active);
+		else this.send_current();
+
+
+	}
+
+	this.refresh_button = function() {
+		if (this.active == "true") button.badge("on");
+		else if (this.active == "false") button.badge("off");
+	}
+
+	this.send = function(url, tab) {
+
+		active = this.calculate_status(url);
+		Message(tab, "status", active);
+
+		return active;
+
+	}
+
+	this.send_current = function() {
+
+		tab = opera.extension.tabs.getFocused();
+		active = this.calculate_status(tab.url);
+		Message(tab, "status", active);
+		button.badge(active);
+
+	}
+
+	this.calculate_status = function(url) {
+
+		if (this.active == "list") {
+                        if ((this.list.indexOf(" "+get_dominio(url))!=-1 ) || (this.list.indexOf(" "+get_dominio(url, 'all'))!=-1))
+                                widget.preferences.black == "false" ? res = "true" : res = "false";
+			else res = widget.preferences.black;
+
+			return res;
+
+		} else return this.active;
+
+	}
+
+	this.load_list = function() {
+		this.list = localStorage.getItem("site_list");
+		if (!this.list) this.list = "";
+	}
+
+	this.active = widget.preferences.active;
+	this.load_list();
+	this.refresh_button();
+
+}
+
+
+var button = new Button();
+var prefs = new Prefs();
+var stat = new Stat();
+
+this.activate = function() { stat.change("true"); }
+this.deactivate = function() { stat.change("false"); }
+this.activate_list = function() { stat.change("list"); }
+
+opera.extension.onconnect = function(event) {
+
+	if (event.origin.indexOf('widget://') == -1) {
+
+		check = stat.send(event.origin, event.source);
+		if (check) prefs.send(event.source);
+		button.badge(check);
+	}
+}
+
+opera.extension.tabs.onfocus = function(event) {
+
+	prefs.update_all();
+	if (stat.active == "list") {
+		tab = opera.extension.tabs.getFocused();
+		if (tab != null) {
+			check = stat.send(tab.url, tab);
+			button.badge(check);
+		}
+	}
+
+}
 
 
 </script>
-
 </head>
 </html>

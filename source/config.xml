@@ -8,14 +8,15 @@
 	<description xml:lang="ru">Маркер прокрутки - помощь при чтении длинных страниц</description>
 
 	<preference name="trasp" value="50" />
-	<preference name="time" value="1.5" />
-	<preference name="time_ch" value="1" />
-	<preference name="active" value="true" />
-	<preference name="black" value="false" />
-	<preference name="button" value="true" />
-	<preference name="hide_click" value="true" />
 	<preference name="color" value="#b0b0b0" />
 	<preference name="height" value="30" />
 	<preference name="line_type" value="0" />
+	<preference name="time_ch" value="true" />
+	<preference name="hide_click" value="true" />
+	<preference name="mode" value="always" />
+	<preference name="black" value="false" />
+	<preference name="button" value="true" />
+	<preference name="time" value="1.5" />
+	<preference name="active" value="true" />
 
 </widget>

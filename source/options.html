@@ -3,8 +3,6 @@
 
 <head>
 
-<meta http-equiv="Content-Type" content="text/html;charset=utf-8">
-
 <script src="options_file/options_desc.js"></script>
 <script src="options_file/input_type.js"></script>
 <script src="translation.js"></script>
@@ -12,9 +10,12 @@
 <link rel="stylesheet" type="text/css" href="options_file/layout.css">
 <link rel="stylesheet" type="text/css" href="lang_layout.css">
 
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+
 </head>
 
 <body>
+
 <div id="cont"></div>
 
 <script>
@@ -81,7 +82,7 @@ function import_list() {
 	localStorage.setItem("site_list", new_list);
 	ielist.value = new_list;
 
-	opera.extension.bgProcess.load_list();
+	opera.extension.bgProcess.stat.load_list();
 
 	alert(_("New list imported"));
 }
@@ -152,15 +153,15 @@ function change_activation(event) {
 	switch(new_status) {
 	
 	case "active", "active_bt":
-		opera.extension.bgProcess.activate();
+		opera.extension.bgProcess.popup.activate();
 	break;
 	
 	case "list", "list_bt":
-		opera.extension.bgProcess.activate_list();
+		opera.extension.bgProcess.popup.activate_list();
 	break;
 
 	case "deactive", "deactive_bt":
-		opera.extension.bgProcess.deactivate();
+		opera.extension.bgProcess.popup.deactivate();
 	break;
 	
 	}
@@ -213,11 +214,17 @@ function add_activation_buttons() {
 
 function add_thumbnail() {
 
+	thb_bg = document.createElement("div");
+	thb_bg.style.backgroundImage = "url('thumb.png')";
+	thb_bg.style.height = "88px";
+
 	thumb = document.createElement("canvas");
 	thumb.setAttribute("width", "640px");
 	thumb.setAttribute("id", "thumb");
 
-	document.getElementById("cont").appendChild(thumb);
+	thb_bg.appendChild(thumb);
+
+	document.getElementById("cont").appendChild(thb_bg);
 
 }
 

@@ -30,9 +30,9 @@ document.getElementById("active_bt").innerHTML = _("Always active");
 document.getElementById("list_bt").innerHTML = _("According to the list");
 document.getElementById("deactive_bt").innerHTML = _("Deactive");
 
-
 //check the current mode
 switch (widget.preferences.active) {
+
 	case "true":
 	document.getElementById('active_bt').style.border = "1px solid green";
 	break;
@@ -65,16 +65,16 @@ try {
 		label = document.getElementById('add/remove');
 
 		//if not in list
-		if ( (opera.extension.bgProcess.list.indexOf(" " + dom_all) == -1) && (opera.extension.bgProcess.list.indexOf(" " + dom_only) == -1) ) {
+		if ( (opera.extension.bgProcess.stat.list.indexOf(" " + dom_all) == -1) && (opera.extension.bgProcess.stat.list.indexOf(" " + dom_only) == -1) ) {
 			label.innerHTML = "<br><a href=\"javascript:add_site()\">"+_("Add this site to the list")+"</a><br><br><a href='javascript:add_site(\"all\")'>"+_("Add all")+" " + dom_all + " " + _("sites to the list")+"</a>";	
 
 		} else {
 
-			if (opera.extension.bgProcess.list.indexOf(" " + dom_all) > -1) { //ALL
+			if (opera.extension.bgProcess.stat.list.indexOf(" " + dom_all) > -1) { //ALL
 				label.innerHTML = "<br><a href='javascript:remove_site(\"" + dom_all + "\")' style=\"color:red\">"+_("Remove all") + " " + dom_all + " " + _("sites from the list")+"</a>";
 			}
 
-			if (opera.extension.bgProcess.list.indexOf(" " + dom_only) > -1) { //ONLY
+			if (opera.extension.bgProcess.stat.list.indexOf(" " + dom_only) > -1) { //ONLY
 				label.innerHTML = "<br><a href=\"javascript:remove_site()\" style=\"color:red\">"+_("Remove this site from the list")+"</a><br><br><a href='javascript:extend_add_site(\""+dom_only+"\", \""+dom_all+"\")'>"+_("Add all")+" " + dom_all + " " + _("sites to the list")+"</a>";
 			}
 		}

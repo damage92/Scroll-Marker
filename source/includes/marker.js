@@ -5,15 +5,40 @@ if (window.top == window) {
 
 	var prefs;
 	var marker;
-	var cont_loaded = false;
+	var active = "false";
+	var init = new Init();
 
 	opera.extension.addEventListener('message', on_message, false);
-	window.addEventListener('DOMContentLoaded', on_content_load, false);
+	window.addEventListener('DOMContentLoaded', function(){init.loaded()}, false);
 		
 	//not on a timer!
 	window.opera.addEventListener('BeforeEvent.mousewheel', on_mouse_wheel, false);
-		
+
 }
+
+
+function Init() {
+
+	this.c_load = false;
+
+	this.loaded = function() {
+		this.c_load = true;
+		this.start();
+	}
+
+	this.start = function() {
+	
+		if ((prefs != undefined) && this.c_load && active == "true")
+			marker = new Marker();
+
+	}
+
+	this.stop = function() {
+		marker.destructor();
+	}
+
+}
+
 
 function on_message(event) {
 
@@ -25,21 +50,19 @@ function on_message(event) {
 		
 		case "status":
 		
-			console.log("status received");
-		
-/*
-			//copy old prefs
-			var old_active = prefs.active;
-			var old_listed = prefs.listed;
+			if (active != message.data) {
+				active = message.data;
+				if (message.data == "true") init.start();
+				else init.stop();
+			}
 
-			//set new prefs
-			if (prefs.msg[3]) prefs.active = prefs.msg[3];
-			if (prefs.msg[4]) prefs.listed = prefs.msg[4];
 
-			decide_activation(old_active, old_listed);
-*/
 		break;
-		
+
+		case "status_request":
+			opera.source.postMessage({title: "status", value: active});
+		break;
+
 		case "prefs":
 
 			//read prefs
@@ -53,7 +76,7 @@ function on_message(event) {
 
 			//apply new prefs
 			if (marker != undefined) marker.apply_prefs();
-			else if (cont_loaded == true) init();
+			else init.start();
 
 		break;
 
@@ -62,17 +85,6 @@ function on_message(event) {
 	}
 
 }
-
-
-//init functions
-function on_content_load() {
-	prefs != undefined ? init() : cont_loaded = true;
-}
-
-function init() {
-	marker = new Marker();
-}
-
 
 //events
 function on_scroll_al(e) {
@@ -108,7 +120,9 @@ function on_key_press(e) {
 }
 
 function on_mouse_wheel() {
-	marker.scroll_input = 0;
+
+	try {marker.scroll_input = 0;}
+	catch(e){}
 }
 
 
@@ -157,6 +171,7 @@ function Marker() {
 				document.addEventListener("scroll", on_scroll_b, false);
 			break;
 		}
+
 
 
 		//draw line and arrows
@@ -208,7 +223,6 @@ function Marker() {
 
 	this.on_hide_timer = function() {
 	
-		console.log("hide timer scaduto");
 		this.hide_timer = 0;
 		this.hide();
 		
@@ -216,14 +230,13 @@ function Marker() {
 	
 	this.on_reset_timer = function() {
 	
-		console.log("reset timer scaduto");
 		this.reset_timer = 0;
 		this.set_limits();
 	}
 
 	this.set_limits = function () {
-		this.bottom_limit = window.innerHeight + window.scrollY;
-		this.top_limit = window.scrollY;
+		this.bottom_limit = window.innerHeight + window.scrollY + prefs.height/2;
+		this.top_limit = window.scrollY - prefs.height/2;
 	}
 
 
@@ -328,12 +341,27 @@ function Marker() {
 	this.reset_timer = 0;
 	this.scroll_input = 0;
 	this.key_values = new Array(32, 33, 34);
-	this.bottom_limit = window.innerHeight + window.scrollY;
-	this.top_limit = window.scrollY;
+	this.set_limits();	
 	this.last_scrollY = window.scrollY;
 
 	//connect events
 	document.addEventListener('keypress', on_key_press, false);
+
+	this.destructor = function() {
+
+		document.removeEventListener('keypress', on_key_press);
+
+		document.removeEventListener("scroll", on_scroll_al);
+		document.removeEventListener("scroll", on_scroll_t);
+		document.removeEventListener("scroll", on_scroll_b);
+		document.removeEventListener("scroll", on_scroll_tb);
+
+		document.removeEventListener("click", on_click);
+
+		document.body.removeChild(this.main_div);
+
+		delete this;
+	}
 	
 }
 

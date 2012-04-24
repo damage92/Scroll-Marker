@@ -25,59 +25,56 @@ body {
 
 var sel_item;
 
-function on_item_click(target) {
+	function on_item_click(target) {
 
-	if (sel_item) sel_item.style.fontWeight = "normal";
-	sel_item = target;
-	sel_item.style.fontWeight = "bold";
+		if (sel_item) sel_item.style.fontWeight = "normal";
+		sel_item = target;
+		sel_item.style.fontWeight = "bold";
 
-	document.getElementById('text_input').value = target.innerHTML;
-
-}
-
-
-function delete_item() {
-	
-	var warn_label = document.getElementById('warn');
-	warn_label.style.display = "none";
-
-	if (!sel_item) {
-		warn_label.innerHTML = _("Select an item!");
-		warn_label.style.display = "inline";
-		return;
 	}
 
-	opera.extension.bgProcess.remove_site(sel_item.innerHTML);
-	document.getElementById('list').removeChild(sel_item);
 
-	sel_item = null;
+	function delete_item() {
+		
+		var warn_label = document.getElementById('warn');
+		warn_label.style.display = "none";
 
-	warn_label.innerHTML = _("Deleted");
-	warn_label.style.display = "inline";
+		if (!sel_item) {
+			warn_label.innerHTML = _("Select an item!");
+			warn_label.style.display = "inline";
+			return;
+		}
 
-}
+		opera.extension.bgProcess.remove_site(sel_item.innerHTML);
+		document.getElementById('list').removeChild(sel_item);
 
+		sel_item = null;
 
-</script>
+		warn_label.innerHTML = _("Deleted");
+		warn_label.style.display = "inline";
 
-</head>
-<body align="left" style="background:#f9f9f9">
-
-<a id="back_bt" href="javascript:window.location='popup.html'" style="text-decoration:none"></a><br>
-<br>
-
-<div id="list" style="overflow-y:scroll; height:170px; background:#ddd">
-
-<script type="text/javascript">
+	}
 
 
-	document.getElementById("back_bt").innerHTML = "&lt;&lt; "+_("Back...");
+	</script>
 
-	//view the list
-	list_arr = opera.extension.bgProcess.list.split(" ");
+	</head>
+	<body align="left" style="background:#f9f9f9">
 
-	if (list_arr.length <= 1) document.writeln("<div style='color:#333'><i>"+_("Empty list!")+"</i></div>");		
-	else {
+	<a id="back_bt" href="javascript:window.location='popup.html'" style="text-decoration:none"></a><br>
+	<br>
+
+	<div id="list" style="overflow-y:scroll; height:170px; background:#ddd">
+
+	<script type="text/javascript">
+
+		document.getElementById("back_bt").innerHTML = "&lt;&lt; "+_("Back...");
+
+		//view the list
+		list_arr = opera.extension.bgProcess.stat.list.split(" ");
+
+		if (list_arr.length <= 1) document.writeln("<div style='color:#333'><i>"+_("Empty list!")+"</i></div>");		
+		else {
 		for (i=0; i<list_arr.length; i++)
 			document.writeln("<div class='list_item' onClick='on_item_click(this)'>" + list_arr[i] + "</div>");
 	}	
@@ -88,7 +85,6 @@ function delete_item() {
 
 
 <p style="font-family:monospace; font-size:15px">
-
 
 <a id="delete_bt" href="javascript:delete_item()"></a><br>
 
