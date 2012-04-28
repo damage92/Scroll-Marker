@@ -209,9 +209,9 @@ function Stat() {
 	this.calculate_status = function(url) {
 
 		if (this.active == "list") {
-                        if ((this.list.indexOf(" "+get_dominio(url))!=-1 ) || (this.list.indexOf(" "+get_dominio(url, 'all'))!=-1))
-                                widget.preferences.black == "false" ? res = "true" : res = "false";
-			else res = widget.preferences.black;
+			if ((this.list.indexOf(" "+get_dominio(url))!=-1 ) || (this.list.indexOf(" "+get_dominio(url, 'all'))!=-1)) {
+				widget.preferences.black == "false" ? res = "true" : res = "false";
+			} else res = widget.preferences.black;
 
 			return res;
 

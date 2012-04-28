@@ -3,9 +3,10 @@
 	<name>Scroll Marker</name>
 	<author href="http://stylecode.altervista.org">Damage92</author>
 	<icon src="icon.png"/>
-	<description xml:lang="en">A marker that helps you to read long pages</description>
-	<description xml:lang="it">Un marcatore che aiuta a leggere testi lunghi</description>
+	<description xml:lang="en">A marker that helps you to read long pages.</description>
+	<description xml:lang="it">Un marcatore che aiuta a leggere testi lunghi.</description>
 	<description xml:lang="ru">Маркер прокрутки - помощь при чтении длинных страниц</description>
+	<description xml:lang="de">Eine Scroll-Markierung, die beim Lesen langer Seiten hilft.</description>
 
 	<preference name="trasp" value="50" />
 	<preference name="color" value="#b0b0b0" />

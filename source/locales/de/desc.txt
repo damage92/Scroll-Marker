@@ -1,4 +1,4 @@
-"A marker that helps you to read long pages" : ""
+"A marker that helps you to read long pages" : "Eine Scroll-Markierung, die beim Lesen langer Seiten hilft."
 
 "Scroll Marker helps you to read long texts on web pages. When you read a long text, you must often scroll the page, so you may miss the mark. Scroll Marker draw a marker that shows you where was the end of the page before scroll it. In this way you can easly find the mark.
 
@@ -9,8 +9,18 @@ You can activate or deactivate the marker using a popup. Alternatively you can c
 If you want to translate this extension you can email me or visit support page.
 
 Thanks to OK3 for having suggested the idea, and for his help in realization.
-Thank to larsen007 for german translation." : ""
+Thank to larsen007 for german translation." : "Scroll Marker hilft ihnen beim Lesen langer Texte auf Webseiten. Wenn sie einen langen Text lesen, müssen sie oft scrollen und übersehen dabei die Stelle, wo sie zuletzt waren. Scroll Marker zeigt ihnen eine Markierung an, sodass sie diese Stelle schnell sehen können.
 
-"better code" : ""
-"new look" : ""
-"german traslation" : ""
+Es gab diese Funktion bereits in einer älteren Opera-Version, aber in neueren Versionen wurde sie entfernt.
+
+Sie können die Markierung über ein Kontextmenü aktivieren oder deaktivieren. Alternativ können sie festlegen, dass die Markierung nur auf bestimmten von ihnen festgelegten Webseiten angezeigt werden soll. Dies funktioniert auch andersrum, d.h. die Markierung wird auf allen bis auf die festgelegten Webseiten angezeigt.
+
+Falls sie diese Extension in eine andere Sprache übersetzen wollen, können sie mir eine eMail schicken oder die Support-Seite besuchen.
+
+Vielen Dank an OK3 (http://my.opera.com/OK3a/) dafür, dass er die Idee vorgeschlagen hat und für seine Hilfe bei der Realisierung.
+Vielen Dank an larsen007 für die deutsche Übersetzung.
+"
+
+"better code" : "optimierter Code"
+"new look" : "neues Aussehe"
+"german traslation" : "deutsche Übersetzung"
