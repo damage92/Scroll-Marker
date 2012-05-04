@@ -91,7 +91,7 @@ function load() {
 
 	document.title = _("Scroll Marker options page");
 	
-	document.getElementById("cont").innerHTML += "<p class=\"header\">Scroll Marker <span style=\"font-size:13px\">"+_("version")+" 0.6</span><br><a href=\"http://stylecode.altervista.org\" style=\"font-size:15px\">"+_("by Damage92")+"</a></p>";
+	document.getElementById("cont").innerHTML += "<p class=\"header\">Scroll Marker <span style=\"font-size:13px\">"+_("version")+" 0.6-2</span><br><a href=\"http://stylecode.altervista.org\" style=\"font-size:15px\">"+_("by Damage92")+"</a></p>";
 
 	insert_section_title("Marker aspect:");
 	add_option("trasp");
@@ -153,15 +153,15 @@ function change_activation(event) {
 	switch(new_status) {
 	
 	case "active", "active_bt":
-		opera.extension.bgProcess.popup.activate();
+		opera.extension.bgProcess.activate();
 	break;
 	
 	case "list", "list_bt":
-		opera.extension.bgProcess.popup.activate_list();
+		opera.extension.bgProcess.activate_list();
 	break;
 
 	case "deactive", "deactive_bt":
-		opera.extension.bgProcess.popup.deactivate();
+		opera.extension.bgProcess.deactivate();
 	break;
 	
 	}

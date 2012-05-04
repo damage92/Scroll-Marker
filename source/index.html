@@ -110,14 +110,23 @@ function Button() {
 
 	this.badge = function(label) {
 
-		if (label == "on" || label == "true") {
-                        this.button.badge.textContent = "on";
-                        this.button.badge.backgroundColor = "rgba(50, 256, 50, 0.3)";
-		} else {
-                        this.button.badge.textContent = "off";
-                        this.button.badge.backgroundColor = "rgba(256, 50, 50, 0.3)";
-		}
+		switch(label) {
 
+			case "true":
+				this.button.badge.textContent = "on";
+				this.button.badge.backgroundColor = "rgba(50, 256, 50, 0.3)";
+			break;
+
+			case "false":
+	                        this.button.badge.textContent = "off";
+        	                this.button.badge.backgroundColor = "rgba(256, 50, 50, 0.3)";	
+			break;			
+
+			case "void":
+				this.button.badge.textContent = "";
+			break;
+
+		}
         }
 
 
@@ -184,8 +193,9 @@ function Stat() {
 	}
 
 	this.refresh_button = function() {
-		if (this.active == "true") button.badge("on");
-		else if (this.active == "false") button.badge("off");
+		button.badge(this.active);
+//		if (this.active == "true") button.badge("on");
+//		else if (this.active == "false") button.badge("off");
 	}
 
 	this.send = function(url, tab) {
@@ -200,6 +210,10 @@ function Stat() {
 	this.send_current = function() {
 
 		tab = opera.extension.tabs.getFocused();
+		if (tab == null) {
+			button.badge("void");
+			return;
+		}
 		active = this.calculate_status(tab.url);
 		Message(tab, "status", active);
 		button.badge(active);
@@ -257,6 +271,8 @@ opera.extension.tabs.onfocus = function(event) {
 		if (tab != null) {
 			check = stat.send(tab.url, tab);
 			button.badge(check);
+		} else {
+			button.badge("void");
 		}
 	}
 
