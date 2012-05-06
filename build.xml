@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<project name="Scrollmarker" default="build">
+
+	<!-- properties and fileset -->
+	<property name="ver_num" value="0.6-3"/>
+	<fileset id="propdeps" dir="src/" casesensitive="yes">
+		<!-- files to overwrite also if not newer because contains a property maybe to refresh -->
+		<include name="config.xml" />
+		<include name="options.html" />
+	</fileset>
+
+	<target name="init" description="Create initial files and folders">
+		<mkdir dir="build" />
+	</target>
+
+	<target name="build" description="Build" depends="init">
+
+		<copy todir="build" preservelastmodified="true" ><fileset dir="src/" casesensitive="yes" /></copy>
+		<copy todir="build" overwrite="true"><fileset refid="propdeps"/></copy>
+		<replaceregexp file="build/config.xml" match="#ver_num#" flags="gs" replace="${ver_num}" />
+		<replaceregexp file="build/options.html" match="#ver_num#" flags="gs" replace="${ver_num}" />
+
+	</target>
+
+	<target name="clean" description="remove build and oex">
+
+		<delete file="scrollmarker.oex" />
+		<delete dir="build/" />
+
+	</target>
+
+	<target name="oex" description="make oex" depends="build">
+
+		<delete file="scrollmarker.oex" />
+		<zip destfile="scrollmarker.oex" basedir="build" />
+
+	</target>
+
+</project>
+

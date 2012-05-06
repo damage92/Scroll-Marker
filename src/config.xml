@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<widget xmlns="http://www.w3.org/ns/widgets" defaultlocale="en" version="0.6-2" id="extension:scrollmarker">
+<widget xmlns="http://www.w3.org/ns/widgets" defaultlocale="en" version="#ver_num#" id="extension:scrollmarker">
 	<name>Scroll Marker</name>
 	<author href="http://stylecode.altervista.org">Damage92</author>
 	<icon src="icon.png"/>

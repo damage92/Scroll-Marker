@@ -18,8 +18,10 @@ Przywołać i schować zakładkę można przy pomocy guzika na pasku narzędzi. 
 Jeśli chcesz przełożyć Scroll Marker na swój język, wyślij mi mejla albo wpisz się na stronie pomocy.
 
 Dziękuję OK3 (http://my.opera.com/OK3a/) za podsunięcie pomysłu i pomoc w wykonaniu.
-Dziękuję larsen007 za przekład na niemczyznę."
+Dziękuję larsen007 za przekład na niemczyznę.
+Dziękuję Piotrowi Wójcikowi (http://my.opera.com/chocimir) za przekład na polszczyznę."
 
 "better code" : "poprawki kodu"
 "new look" : "nowy wygląd"
-"german traslation" : "niemieckie tłumaczenie"
+"german translation" : "niemieckie tłumaczenie"
+"polish translation" : "polskie tłumaczenie"
