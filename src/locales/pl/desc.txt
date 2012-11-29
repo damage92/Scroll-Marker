@@ -25,3 +25,4 @@ Dziękuję Piotrowi Wójcikowi (http://my.opera.com/chocimir) za przekład na po
 "new look" : "nowy wygląd"
 "german translation" : "niemieckie tłumaczenie"
 "polish translation" : "polskie tłumaczenie"
+"fixed page up/down issue" : "Naprawiono błąd z Page Up-Down"

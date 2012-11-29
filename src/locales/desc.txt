@@ -12,4 +12,4 @@ Thanks to OK3 for having suggested the idea, and for his help in realization.
 Thanks to larsen007 for german translation.
 Thanks to Piotr Wójcik (http://my.opera.com/chocimir) for polish translation." : ""
 
-"polish traslation" : ""
+"Fixed page up/down issue" : ""

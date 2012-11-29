@@ -63,14 +63,20 @@ function modify_site(old_site, new_site) {
 
 
 function Message(dest, title, data) {
-	
-	mess = {};
-	mess.title = title;
-	mess.data = data;
 
-	if (dest == null) opera.extension.broadcastMessage(mess);
-	else {
-		try { dest.postMessage(mess); }
+	if (dest == null) {
+
+		mess = {};
+		mess.title = title;
+		mess.data = data;
+		opera.extension.broadcastMessage(mess);
+
+	} else {
+
+		data.title = title;
+		jmess = JSON.stringify(data);
+
+		try { dest.postMessage(jmess); }
 		catch(exception) {}
 	}
 
@@ -201,7 +207,12 @@ function Stat() {
 	this.send = function(url, tab) {
 
 		active = this.calculate_status(url);
-		Message(tab, "status", active);
+
+		obj = {
+			active: active
+		}
+
+		Message(tab, "status", obj);
 
 		return active;
 

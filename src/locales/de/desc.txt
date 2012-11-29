@@ -19,8 +19,10 @@ Falls sie diese Extension in eine andere Sprache übersetzen wollen, können sie
 
 Vielen Dank an OK3 (http://my.opera.com/OK3a/) dafür, dass er die Idee vorgeschlagen hat und für seine Hilfe bei der Realisierung.
 Vielen Dank an larsen007 für die deutsche Übersetzung.
+Vielen Dank an Piotr Wójcik (http://my.opera.com/chocimir) für die polnische Übersetzung.
 "
 
 "better code" : "optimierter Code"
 "new look" : "neues Aussehe"
 "german traslation" : "deutsche Übersetzung"
+"fixed page up/down issue" : "Problem mit "Bild hoch/runter"-Tasten korrigiert".

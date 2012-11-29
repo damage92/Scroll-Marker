@@ -2,7 +2,7 @@
 <project name="Scrollmarker" default="build">
 
 	<!-- properties and fileset -->
-	<property name="ver_num" value="0.6-3"/>
+	<property name="ver_num" value="0.6-4"/>
 	<fileset id="propdeps" dir="src/" casesensitive="yes">
 		<!-- files to overwrite also if not newer because contains a property maybe to refresh -->
 		<include name="config.xml" />

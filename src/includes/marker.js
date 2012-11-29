@@ -41,17 +41,17 @@ function Init() {
 
 function on_message(event) {
 
-	message = event.data;
+	message = JSON.parse(event.data);
 
 	if (message.title != undefined) {
-	
-		switch (event.data.title) {
+
+		switch (message.title) {
 		
 		case "status":
 		
-			if (active != message.data) {
-				active = message.data;
-				if (message.data == "true") init.start();
+			if (active != message.active) {
+				active = message.active;
+				if (message.active == "true") init.start();
 				else init.stop();
 			}
 
@@ -66,8 +66,8 @@ function on_message(event) {
 
 			//read prefs
 			prefs = {};
-			for (opt in message.data)
-				prefs[opt] = message.data[opt]
+			for (opt in message)
+				prefs[opt] = message[opt]
 				
 			//set usable prefs values
 			prefs.time = prefs.time*1000;
@@ -80,8 +80,8 @@ function on_message(event) {
 		break;
 
 
-		}
-	}
+		} 
+	} 
 
 }
 
@@ -132,12 +132,12 @@ function on_resize() {
 function Marker() {
 
 	this.apply_prefs = function() {
-	
+
 		//apparence
 		this.main_div.setAttribute("height", prefs.height + "px");
 		this.main_div.style.opacity = prefs.trasp;
 		this.main_div.style.background = prefs.color;
-		
+
 		//hide on click
 		if (prefs.hide_click == "true")
 			document.addEventListener("click", on_click, false);
@@ -176,6 +176,7 @@ function Marker() {
 		}
 		
 		this.draw_line();
+
 
 	}
 
@@ -311,7 +312,7 @@ function Marker() {
 
 		if (this.last_scrollY == window.scrollY) return;
 
-		if (this.key_values.indexOf(this.scroll_input) == -1) {
+//		if (this.keys_never.indexOf(this.scroll_input) == -1) {
 
 			if (this.reset_timer == 0) {
 	
@@ -330,7 +331,7 @@ function Marker() {
 			this.launch_hide_timer();
 			this.reset_timer = setTimeout(on_reset_timer, this.reset_time);
 		
-		} else this.set_limits();
+//		} else this.set_limits();
 
 		this.last_scrollY = window.scrollY;
 		
@@ -345,14 +346,19 @@ function Marker() {
 	this.main_div.style = "z-index:90000; position:absolute; left:0px; top:0px; visibility:hidden;";
 	this.apply_prefs();
 
-	document.body.appendChild(this.main_div);
+//	document.body.appendChild(this.main_div);
+        if (window.location.host == "xkcd.com") document.documentElement.appendChild(this.main_div);
+        else document.body.appendChild(this.main_div);
+
 
 	//initialize variables
 	this.reset_time = 2000;
 	this.hide_timer = 0;
 	this.reset_timer = 0;
 	this.scroll_input = 0;
-	this.key_values = new Array(32, 33, 34);
+//	this.key_values = new Array(32, 33, 34);
+	this.keys_never = new Array();
+	this.keys_always = new Array();
 	this.set_limits();	
 	this.last_scrollY = window.scrollY;
 
